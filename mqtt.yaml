@@ -1,0 +1,83 @@
+- binary_sensor:
+    #
+    # Doorbell state: on/off
+    #
+    name: "Doorbell Ringing"
+    state_topic: "doorbell/ring"
+    payload_on: "on"
+    payload_off: "off"
+    availability:
+      - topic: "doorbell/available"
+        payload_available: "online"
+        payload_not_available: "offline"
+    qos: 0
+    device_class: "motion"
+    icon: mdi:doorbell_video
+
+
+- switch:
+    #
+    # Front door lights: on/off
+    #
+    name: "Front Door Lights"
+    unique_id: front_door_lights
+    state_topic: "doorbell/status"
+    value_template: "{{ value_json.light }}"
+    state_on: "on"
+    state_off: "off"
+    command_topic: "doorbell/cmd"
+    payload_on: "light on"
+    payload_off: "light off"
+    availability:
+      - topic: "doorbell/available"
+        payload_available: "online"
+        payload_not_available: "offline"
+    availability_mode: latest
+    enabled_by_default: true
+    optimistic: false
+    qos: 0
+    retain: true
+    icon: mdi:light-flood-down
+    device_class: "outlet"
+
+- switch:
+    #
+    # Enables opening the front door on physical button: on/off
+    #
+    name: "Enables Opening Front Door"
+    unique_id: front_door_can_open
+    state_topic: "doorbell/status"
+    value_template: "{{ value_json.enabled }}"
+    state_on: "on"
+    state_off: "off"
+    command_topic: "doorbell/cmd"
+    payload_on: "open door on"
+    payload_off: "open door off"
+    availability:
+      - topic: "doorbell/available"
+        payload_available: "online"
+        payload_not_available: "offline"
+    availability_mode: latest
+    enabled_by_default: true
+    optimistic: false
+    qos: 0
+    retain: true
+    icon: mdi:door-closed-lock
+    device_class: "switch"
+
+- button:
+    #
+    # opens the front door
+    #
+    name: "Opens Front Door"
+    unique_id: front_door_open
+    command_topic: "doorbell/cmd"
+    payload_press: "open door"
+    availability:
+      - topic: "doorbell/available"
+        payload_available: "online"
+        payload_not_available: "offline"
+    qos: 0
+    retain: false
+    entity_category: "config"
+    device_class: restart
